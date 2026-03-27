@@ -1,0 +1,61 @@
+# ==========================================
+# LARAVEL – .gitignore
+# ==========================================
+
+# Environment bestanden (bevatten wachtwoorden/keys!)
+.env
+.env.backup
+.env.production
+
+# Dependencies (te groot, worden opnieuw geïnstalleerd via composer)
+/vendor/
+/node_modules/
+
+# Database (lokaal bestand, niet naar GitHub)
+/database/database.sqlite
+/database/*.sqlite
+
+# Cache & gegenereerde bestanden
+/bootstrap/cache/*.php
+/storage/*.key
+
+# Storage (uploads, logs, cache)
+/storage/app/public/*
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+
+# Uitzonderingen binnen storage (mappen moeten wel bestaan)
+!storage/app/public/.gitkeep
+!storage/logs/.gitkeep
+!storage/framework/cache/.gitkeep
+!storage/framework/sessions/.gitkeep
+!storage/framework/testing/.gitkeep
+!storage/framework/views/.gitkeep
+
+# Build bestanden
+/public/build
+/public/hot
+/public/storage
+/public/mix-manifest.json
+
+# NPM build output
+npm-debug.log
+yarn-error.log
+
+# IDE bestanden (PHPStorm)
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# PHPUnit
+/.phpunit.cache
+/phpunit.xml
+
+# Compiled classes
+compiled.php

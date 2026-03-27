@@ -1,0 +1,3 @@
+<IfModule mod_php.c>
+    php_value open_basedir "/var/www/vhosts/102821.stu.sd-lab.nl/:/tmp/"
+</IfModule>
