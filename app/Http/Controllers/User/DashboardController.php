@@ -16,16 +16,20 @@ class DashboardController extends Controller {
         $totalSpots  = $spots->count();
         $bezettingsgraad = $totalSpots > 0 ? round((($bezet + $gereserveerd) / $totalSpots) * 100) : 0;
 
-        $mijnReservaties = Reservation::where('user_id', Auth::id())
+        $user = Auth::user();
+
+        $mijnReservaties = Reservation::where('user_id', $user->id)
             ->where('status', 'actief')
             ->with('parkingSpot')
             ->latest()
             ->take(3)
             ->get();
 
+        $vehicles = $user->vehicles;
+
         return view('user.dashboard', compact(
             'spots', 'beschikbaar', 'bezet', 'gereserveerd',
-            'bezettingsgraad', 'mijnReservaties', 'totalSpots'
+            'bezettingsgraad', 'mijnReservaties', 'totalSpots', 'vehicles'
         ));
     }
 }

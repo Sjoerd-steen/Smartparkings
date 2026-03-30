@@ -6,128 +6,72 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SmartParking – @yield('title', 'Dashboard')</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { 50:'#eff6ff', 100:'#dbeafe', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8', 800:'#1e40af', 900:'#1e3a8a' }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body { font-family: 'Segoe UI', system-ui, sans-serif; }
-        .sidebar { width: 260px; min-height: 100vh; }
-        .main-content { flex: 1; min-height: 100vh; }
-        .nav-link { @apply flex items-center gap-3 px-4 py-3 rounded-lg text-blue-200 hover:bg-blue-700 hover:text-white transition-all duration-200; }
-        .nav-link.active { @apply bg-blue-600 text-white; }
-        .card { @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6; }
-        .btn-primary { @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors; }
-        .btn-secondary { @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-2.5 rounded-lg transition-colors; }
-        .btn-danger { @apply bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors; }
-        .badge-green { @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800; }
-        .badge-red { @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800; }
-        .badge-yellow { @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800; }
-        .badge-blue { @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800; }
-        .form-input { @apply w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all; }
-        .form-label { @apply block text-sm font-medium text-gray-700 mb-1.5; }
-        .alert-success { @apply bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 flex items-center gap-2; }
-        .alert-error { @apply bg-red-50 border border-red-200 text-red-800 rounded-lg p-4; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            background-image: url('/images/background.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .main-content { min-height: calc(100vh - 80px); }
+        .card { background-color: #3b4b6b; border-radius: 0.5rem; padding: 2rem; color: white; width: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .form-input { width: 100%; background-color: #d1d5db; color: #1f2937; border: none; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-top: 0.5rem; outline: none; }
+        .form-label { display: block; font-size: 1rem; font-weight: bold; color: white; margin-bottom: 0.25rem; }
+        .btn-primary { background-color: #1f2937; color: white; font-weight: bold; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-align: center; display: inline-block; cursor: pointer; border: none; transition: background 0.2s;}
+        .btn-primary:hover { background-color: #111827; }
+        .btn-danger { background-color: #ef4444; color: white; font-weight: bold; padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center; display: inline-block; cursor: pointer; border: none; transition: background 0.2s;}
+        .btn-danger:hover { background-color: #dc2626; }
     </style>
 </head>
-<body class="bg-gray-50">
-<div class="flex">
+<body class="antialiased">
 
-    {{-- SIDEBAR --}}
-    <aside class="sidebar bg-blue-900 text-white flex flex-col fixed left-0 top-0 z-40">
-        <div class="p-6 border-b border-blue-800">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center font-bold text-lg">🅿</div>
-                <div>
-                    <div class="font-bold text-lg leading-tight">SmartParking</div>
-                    <div class="text-blue-300 text-xs">Slim Parkeerbeheer</div>
-                </div>
-            </div>
-        </div>
+    {{-- TOP HEADER --}}
+    <header class="bg-[#3b5998] h-[80px] px-8 flex items-center justify-between shadow-md">
+        {{-- Left: Logo --}}
+        <a href="/" class="flex items-center h-full py-2">
+            <img src="/images/Screenshot%202026-03-06%20at%2010.43.38%E2%80%AFAM%204.png" alt="SmartParking Logo" class="max-h-12 w-auto object-contain">
+        </a>
 
-        <nav class="p-4 flex-1 space-y-1">
+        {{-- Right: Navigation --}}
+        <nav class="flex items-center gap-6">
             @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <span>📊</span> Dashboard
-                    </a>
-                    <a href="{{ route('admin.spots.index') }}" class="nav-link {{ request()->routeIs('admin.spots*') ? 'active' : '' }}">
-                        <span>🅿️</span> Parkeerplaatsen
-                    </a>
-                    <a href="{{ route('admin.reservations.index') }}" class="nav-link {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}">
-                        <span>📅</span> Reserveringen
-                    </a>
-                    <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-                        <span>👥</span> Gebruikers
-                    </a>
-                @else
-                    <a href="{{ route('user.dashboard') }}" class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
-                        <span>🏠</span> Dashboard
-                    </a>
-                    <a href="{{ route('user.reserve') }}" class="nav-link {{ request()->routeIs('user.reserve') ? 'active' : '' }}">
-                        <span>➕</span> Reserveren
-                    </a>
-                    <a href="{{ route('user.reservations') }}" class="nav-link {{ request()->routeIs('user.reservations') ? 'active' : '' }}">
-                        <span>📋</span> Mijn Reserveringen
-                    </a>
-                @endif
-            @endauth
-        </nav>
-
-        <div class="p-4 border-t border-blue-800">
-            @auth
-                <div class="flex items-center gap-3 mb-3 px-2">
-                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                    </div>
-                    <div class="min-w-0">
-                        <div class="text-sm font-medium truncate">{{ auth()->user()->name }}</div>
-                        <div class="text-xs text-blue-300">{{ ucfirst(auth()->user()->role) }}</div>
-                    </div>
-                </div>
-                <form method="POST" action="{{ route('logout') }}">
+                <a href="{{ route('user.dashboard') }}" class="text-black hover:text-gray-200 flex flex-col items-center">
+                    <svg class="w-8 h-8 rounded-full border-2 border-black p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="text-xs mt-1 font-bold tracking-widest uppercase">Home</span>
+                </a>
+                <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
                     @csrf
-                    <button class="w-full text-left nav-link text-red-300 hover:text-red-200 hover:bg-red-900/30">
-                        <span>🚪</span> Uitloggen
+                    <button type="submit" class="text-black hover:text-gray-200 flex flex-col items-center bg-transparent border-none cursor-pointer">
+                        <svg class="w-8 h-8 rounded-full border-2 border-black p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <span class="text-xs mt-1 font-bold tracking-widest uppercase">Logout</span>
                     </button>
                 </form>
+            @else
+                <a href="{{ route('login') }}" class="text-black hover:text-gray-800 flex flex-col items-center">
+                    <svg class="w-8 h-8 rounded-full border-2 border-black p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <span class="text-xs mt-1 font-bold tracking-widest uppercase">Login</span>
+                </a>
+                <a href="/" class="text-black hover:text-gray-800 flex flex-col items-center">
+                    <svg class="w-8 h-8 rounded-full border-2 border-black p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="text-xs mt-1 font-bold tracking-widest uppercase">Home</span>
+                </a>
             @endauth
-        </div>
-    </aside>
+        </nav>
+    </header>
 
-    {{-- MAIN --}}
-    <main class="main-content ml-[260px]">
-        {{-- TOP BAR --}}
-        <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-30">
-            <h1 class="text-xl font-bold text-gray-800">@yield('page-title', 'Dashboard')</h1>
-            @auth
-                <span class="text-sm text-gray-500">Welkom, <strong>{{ auth()->user()->name }}</strong>
-          @if(auth()->user()->isAdmin())
-                        <span class="ml-2 badge-blue">Admin</span>
-                    @endif
-        </span>
-            @endauth
-        </header>
-
-        <div class="p-8">
-            {{-- FLASH MESSAGES --}}
+    {{-- MAIN CONTENT --}}
+    <main class="main-content flex flex-col items-center w-full px-4 py-8">
+        <div class="w-full max-w-6xl mx-auto">
             @if(session('success'))
-                <div class="alert-success mb-6">
-                    <span>✅</span> {{ session('success') }}
+                <div class="bg-green-500 text-white font-bold px-4 py-3 rounded relative mb-6">
+                    {{ session('success') }}
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="alert-error mb-6">
-                    <p class="font-medium mb-1">⚠️ Er zijn fouten:</p>
-                    <ul class="list-disc list-inside text-sm space-y-1">
+                <div class="bg-red-500 text-white font-bold px-4 py-3 rounded relative mb-6">
+                    <ul class="list-disc list-inside">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -139,6 +83,5 @@
         </div>
     </main>
 
-</div>
 </body>
 </html>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\{
     ParkingSpotController,
     ReservationManagementController
 };
+use App\Http\Controllers\VehicleController;
 
 // === PUBLIEKE ROUTES ===
 Route::get('/', fn() => redirect()->route('login'));
@@ -29,6 +30,10 @@ Route::middleware(['auth', 'banned'])->prefix('user')->name('user.')->group(func
     Route::post('/reserveren/opslaan', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reserveringen', [ReservationController::class, 'index'])->name('reservations');
     Route::delete('/reserveringen/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+    // Voertuigen
+    Route::post('/voertuigen', [VehicleController::class, 'store'])->name('vehicles.store');
+    Route::delete('/voertuigen/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
 });
 
 // === ADMIN ROUTES ===

@@ -18,12 +18,14 @@ class User extends Authenticatable {
         'is_banned' => 'boolean',
     ];
 
-    // Relatie: een user heeft veel reserveringen
     public function reservations() {
         return $this->hasMany(Reservation::class);
     }
 
-    // Helper methods
+    public function vehicles() {
+        return $this->hasMany(Vehicle::class);
+    }
+
     public function isAdmin(): bool {
         return $this->role === 'admin';
     }
